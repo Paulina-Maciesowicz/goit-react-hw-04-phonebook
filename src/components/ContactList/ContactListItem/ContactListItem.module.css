@@ -1,0 +1,31 @@
+.btnDelete {
+    margin-left: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 100px;
+  background-color: var(--white-color);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  color: var(--blueGray-900);
+  border: 0.1px solid var(--blueGray-900);
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 400;
+  min-width: auto;
+
+  -webkit-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 1);
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 1);
+}
+
+.btnDelete:hover,
+.btnDelete:focus {
+  opacity: 1;
+  border: 0.1px solid var(--blueGray-900);
+  background-color: var(--blueGray-900);
+  color: var(--white-color);
+  box-shadow: none;
+}
+
