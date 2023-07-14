@@ -5,31 +5,33 @@ import { ContactList } from './ContactList/ContactList';
 import { ContactForm } from './ContactForm/ContactForm';
 
 export const App = () => {
-  const [state, setState] = useState({
-    contacts: [],
-    filter: '',
-    name: '',
-    number: '',
-  });
+  // const [state, setState] = useState({
+  //   contacts: [],
+  //   filter: '',
+  //   name: '',
+  //   number: '',
+  // });
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(state.contacts));
-  }, [state.contacts]);
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
   useEffect(() => {
     const contactsSave = JSON.parse(localStorage.getItem('contacts'));
     console.log(contactsSave);
     if (contactsSave) {
-      setState(prevState => ({
-        ...prevState,
-        contacts: [...contactsSave],
-      }));
+      setContacts(prevState => [prevState, ...contactsSave]);
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
   const handleChange = e => {
     const { name, value } = e.target;
-    setState(prevState => ({
+    setName(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -38,28 +40,26 @@ export const App = () => {
   const handleSubmit = e => {
     e.preventDefault();
     const newContact = {
-      name: state.name,
-      number: state.number,
+      name: name,
+      number: number,
       id: nanoid(),
     };
-    if (state.contacts.find(contact => contact.name === newContact.name)) {
-      alert(`${state.name} is already in contacts`);
+    if (contacts.find(contact => contact.name === newContact.name)) {
+      alert(`${name} is already in contacts`);
       return;
     }
 
-    setState(prevState => ({
+    setContacts(prevState => ({
       ...prevState,
-      contacts: [...state.contacts, newContact],
+      contacts: [...contacts, newContact],
     }));
     e.target.reset();
   };
 
   const handleDelete = id => {
-    const filteredContacts = state.contacts.filter(
-      contact => contact.id !== id
-    );
+    const filteredContacts = contacts.filter(contact => contact.id !== id);
 
-    setState(prevState => ({
+    setFilter(prevState => ({
       ...prevState,
       contacts: filteredContacts,
     }));
@@ -71,11 +71,7 @@ export const App = () => {
       <ContactForm onSubmit={handleSubmit} onChange={handleChange} />
       <h2>Contacts</h2>
       <Filter onChange={handleChange} />
-      <ContactList
-        contacts={state.contacts}
-        filter={state.filter}
-        onClick={handleDelete}
-      />
+      <ContactList contacts={contacts} filter={filter} onClick={handleDelete} />
     </>
   );
 };
