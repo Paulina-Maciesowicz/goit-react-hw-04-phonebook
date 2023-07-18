@@ -5,13 +5,6 @@ import { ContactList } from './ContactList/ContactList';
 import { ContactForm } from './ContactForm/ContactForm';
 
 export const App = () => {
-  // const [state, setState] = useState({
-  //   contacts: [],
-  //   filter: '',
-  //   name: '',
-  //   number: '',
-  // });
-
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
   const [name, setName] = useState('');
@@ -21,7 +14,7 @@ export const App = () => {
     const contactsSave = JSON.parse(localStorage.getItem('contacts'));
     console.log(contactsSave);
     if (contactsSave) {
-      setContacts(prevState => [prevState, ...contactsSave]);
+      setContacts(prevState => [...prevState, ...contactsSave]);
     }
   }, []);
 
@@ -29,12 +22,15 @@ export const App = () => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const handleChange = e => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
-    setName(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === 'name') {
+      setName(value);
+    } else if (name === 'number') {
+      setNumber(value);
+    } else if (name === 'filter') {
+      setFilter(value);
+    }
   };
 
   const handleSubmit = e => {
@@ -48,29 +44,23 @@ export const App = () => {
       alert(`${name} is already in contacts`);
       return;
     }
-
-    setContacts(prevState => ({
-      ...prevState,
-      contacts: [...contacts, newContact],
-    }));
     e.target.reset();
+    setContacts(prevState => [...prevState, newContact]);
+    setName('');
+    setNumber('');
   };
 
   const handleDelete = id => {
     const filteredContacts = contacts.filter(contact => contact.id !== id);
-
-    setFilter(prevState => ({
-      ...prevState,
-      contacts: filteredContacts,
-    }));
+    setContacts(filteredContacts);
   };
 
   return (
     <>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={handleSubmit} onChange={handleChange} />
+      <ContactForm onSubmit={handleSubmit} onChange={handleInputChange} />
       <h2>Contacts</h2>
-      <Filter onChange={handleChange} />
+      <Filter onChange={handleInputChange} />
       <ContactList contacts={contacts} filter={filter} onClick={handleDelete} />
     </>
   );
